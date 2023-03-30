@@ -5,8 +5,8 @@ using namespace std;
 //========================= Struct =====================
 struct node {
     int data;
-    struct node *pLeft;
-    struct node *pRight;
+    node *pLeft;
+    node *pRight;
 };
 typedef struct node NODE;
 typedef NODE *TREE;
@@ -15,12 +15,30 @@ int getNumberMax(int a, int b, int c);
 void menuStack();
 void menuQueue();
 void menuTree();
+void inArrTree(int x, int a[100]);
+void outArrTree(int x, int a[100]);
 void inputArray(int n, int a[]);
 void outputArray(int n, int a[]);
 void initTree(TREE &t);
 void addNodeTree(TREE &t, int x);
-void DuyetNLR(TREE t);
+void traversalNLR(TREE t);
+void traversalLNR(TREE t);
+void traversalLRN(TREE t);
+NODE *searchTrees(TREE t, int x);
 //=======================================================
+
+void inArrTree(int x, int a[100]) {
+    for (int i = 0; i < 100; i++) {
+        a[i] = x;
+    }
+}
+
+void outArrTree(int a[100]) {
+    cout << "Danh sach phan tu nhap vao: ";
+    for (int i = 0; i < 100; i++) {
+        cout << a[i] << "  ";
+    }
+}
 void menuQueue() {
     int choice;
     do {
@@ -50,19 +68,24 @@ void menuQueue() {
             case 4: {
                 break;
             }
-            case 0:
-                // thoat chuong trinh
+            case 0: {  // thoat chuong trinh
                 break;
-            default:
+            }
+            default: {
                 cout << "Chuc nang khong hop le. Vui long chon lai!\n";
                 system("pause");
                 break;
+            }
         }
-        if (choice > 0) system("pause");
+        if (choice > 0) {
+            cout << endl;
+            system("pause");
+        }
     } while (choice != 0);
 }
 void menuTree(TREE &t) {
     int choice;
+    int n = 100, arr[n];
     do {
         // hien thi menu tree
         system("cls");
@@ -71,39 +94,64 @@ void menuTree(TREE &t) {
         cout << "2. Duyet cay: NLR.\n";
         cout << "3. Duyet cay: LNR.\n";
         cout << "4. Duyet cay: LRN.\n";
+        cout << "5. Tim kiem cay nhi phan.\n";
+        cout << "6. Xoa phan tu bat ki trong cay.\n";
         cout << "0. Quay lai menu chinh.\n";
         cout << "===========================\n";
         cout << "Ban chon: ";
         cin >> choice;
         cout << "===========================\n";
         switch (choice) {
-            case 1:
+            case 1: {
                 int x;
                 cout << "Nhap so nguyen x = ";
                 cin >> x;
+                // inArrTree(x, arr);
                 addNodeTree(t, x);
                 break;
-            case 2:
-                cout << "Duyet N-L-R: ";
-                DuyetNLR(t);
+            }
+            case 2: {
+                // outArrTree(arr);
+                cout << "\nDuyet N-L-R: ";
+                traversalNLR(t);
                 break;
-            case 3:
-                cout << "Duyet L-N-R: ";
-                DuyetNLR(t);
+            }
+            case 3: {
+                // outArrTree(arr);
+                cout << "\nDuyet L-N-R: ";
+                traversalLNR(t);
                 break;
-            case 4:
-                cout << "Duyet L-R-N: ";
-                DuyetNLR(t);
+            }
+            case 4: {
+                // outArrTree(arr);
+                cout << "\nDuyet L-R-N: ";
+                traversalLRN(t);
                 break;
-            case 0:
-                // thoat chuong trinh
+            }
+            case 5: {
+                int x;
+                cout << "Nhap so nguyen can tim kiem: ";
+                cin >> x;
+                NODE *p = searchTree(t, x);
+                if (p == NULL)
+                    cout << "\n" << x << " khong ton tai!";
+                else
+                    cout << "\n" << x << " co ton tai!";
                 break;
-            default:
+            }
+            case 0: {  // thoat chuong trinh
+                break;
+            }
+            default: {
                 cout << "Chuc nang khong hop le. Vui long chon lai!\n";
                 system("pause");
                 break;
+            }
         }
-        if (choice > 1) system("pause");
+        if (choice > 1) {
+            cout << endl;
+            system("pause");
+        }
     } while (choice != 0);
 }
 void setNumberMax(int a, int b, int c) {
@@ -135,7 +183,6 @@ void outputArray(int n, int a[]) {
     cout << "So phan tu chan trong mang: " << count << endl;
     cout << "So phan tu le trong mang: " << n - count << endl << endl;
 }
-
 void initTree(TREE &t) { t = NULL; }
 void addNodeTree(TREE &t, int x) {
     NODE *p = new NODE;
@@ -151,14 +198,40 @@ void addNodeTree(TREE &t, int x) {
             addNodeTree(t->pRight, x);
     }
 }
-void DuyetNLR(TREE t) {
+void traversalNLR(TREE t) {
     if (t != NULL) {
         cout << t->data << "  ";
-        DuyetNLR(t->pLeft);
-        DuyetNLR(t->pRight);
-        cout << endl;
+        traversalNLR(t->pLeft);
+        traversalNLR(t->pRight);
     }
 }
+void traversalLNR(TREE t) {
+    if (t != NULL) {
+        traversalLNR(t->pLeft);
+        cout << t->data << "  ";
+        traversalLNR(t->pRight);
+    }
+}
+void traversalLRN(TREE t) {
+    if (t != NULL) {
+        traversalLRN(t->pLeft);
+        traversalLRN(t->pRight);
+        cout << t->data << "  ";
+    }
+}
+NODE *searchTree(TREE t, int x) {
+    if (t == NULL)
+        return NULL;
+    else {
+        if (t->data > x)
+            searchTree(t->pLeft, x);
+        else if (t->data < x)
+            searchTree(t->pRight, x);
+        else
+            return t;
+    }
+}
+
 int main() {
     int choice;
     TREE t;
@@ -194,44 +267,56 @@ int main() {
                 break;
             }
             case 2: {
-                int n = 10, arr[10];
+                int n = 10, arr[n];
                 inputArray(n, arr);
                 outputArray(n, arr);
                 break;
             }
-            case 3:
+            case 3: {
                 break;
-            case 4:
+            }
+            case 4: {
                 break;
-            case 5:
+            }
+            case 5: {
                 break;
-            case 6:
+            }
+            case 6: {
                 break;
-            case 7:
+            }
+            case 7: {
                 break;
-            case 8:
+            }
+            case 8: {
                 break;
-            case 9:
+            }
+            case 9: {
                 break;
-            case 10:
+            }
+            case 10: {
                 menuQueue();
                 system("cls");
                 break;
+            }
             case 11: {
                 initTree(t);
                 menuTree(t);
                 system("cls");
                 break;
             }
-            case 0:
-                // thoat chuong trinh
+            case 0: {  // thoat chuong trinh
                 break;
-            default:
+            }
+            default: {
                 cout << "Chuc nang khong hop le. Vui long chon lai!\n";
                 system("pause");
                 break;
+            }
         }
-        if (choice >= 1 && choice <= 9) system("pause");
+        if (choice >= 1 && choice <= 9) {
+            cout << endl;
+            system("pause");
+        }
     } while (choice != 0);
     return 0;
 }
