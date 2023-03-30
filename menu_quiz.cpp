@@ -24,7 +24,9 @@ void addNodeTree(TREE &t, int x);
 void traversalNLR(TREE t);
 void traversalLNR(TREE t);
 void traversalLRN(TREE t);
-NODE *searchTrees(TREE t, int x);
+NODE *searchTree(TREE t, int x);
+void deleteNode(TREE &t, int data);
+void replaceNode(TREE &X, TREE &P);
 //=======================================================
 
 void inArrTree(int x, int a[100]) {
@@ -139,6 +141,13 @@ void menuTree(TREE &t) {
                     cout << "\n" << x << " co ton tai!";
                 break;
             }
+            case 6: {
+                int data;
+                cout << "Nhap gia tri can xoa: ";
+                cin >> data;
+                deleteNode(t, data);
+                break;
+            }
             case 0: {  // thoat chuong trinh
                 break;
             }
@@ -223,15 +232,46 @@ NODE *searchTree(TREE t, int x) {
     if (t == NULL)
         return NULL;
     else {
-        if (t->data > x)
+        if (x < t->data)
             searchTree(t->pLeft, x);
-        else if (t->data < x)
+        else if (x > t->data)
             searchTree(t->pRight, x);
         else
             return t;
     }
 }
-
+void deleteNode(TREE &t, int data) {
+    if (t == NULL)
+        return;
+    else {
+        if (data < t->data)
+            deleteNode(t->pLeft, data);
+        else if (data > t->data)
+            deleteNode(t->pRight, data);
+        else {
+            NODE *X = t;
+            if (t->pLeft == NULL)
+                t = t->pRight;
+            else if (t->pRight == NULL)
+                t = t->pLeft;
+            else {
+                replaceNode(X, t->pLeft);  // tìm phần tử phải nhất cây con trái
+                                           // của node cần xóa
+            }
+            delete X;
+        }
+    }
+}
+void replaceNode(TREE &X, TREE &P) {  // P = t -> pLeft
+    // duyệt sang bên phải nhất
+    if (P->pRight != NULL)
+        replaceNode(X, P->pRight);
+    else {  // duyệt tới tận cùng node phải của cây con trái
+        X->data = P->data;
+        X = P;         // xóa X
+        P = P->pLeft;  // cập nhật lại liên kết
+    }
+}
 int main() {
     int choice;
     TREE t;
