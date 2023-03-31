@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <iostream>
+#include <queue>
 using namespace std;
 
 //========================= Struct =====================
@@ -15,8 +16,7 @@ int getNumberMax(int a, int b, int c);
 void menuStack();
 void menuQueue();
 void menuTree();
-void inArrTree(int x, int a[100]);
-void outArrTree(int x, int a[100]);
+void outputTreeQueue(int x);
 void inputArray(int n, int a[]);
 void outputArray(int n, int a[]);
 void initTree(TREE &t);
@@ -28,17 +28,12 @@ NODE *searchTree(TREE t, int x);
 void deleteNode(TREE &t, int data);
 void replaceNode(TREE &X, TREE &P);
 //=======================================================
-
-void inArrTree(int x, int a[100]) {
-    for (int i = 0; i < 100; i++) {
-        a[i] = x;
-    }
-}
-
-void outArrTree(int a[100]) {
-    cout << "Danh sach phan tu nhap vao: ";
-    for (int i = 0; i < 100; i++) {
-        cout << a[i] << "  ";
+void outputTreeQueue(queue<int> q) {
+    cout << "Danh sach phan tu nhap vao:  ";
+    while (!q.empty()) {
+        /* code */
+        cout << q.front() << "  ";
+        q.pop();
     }
 }
 void menuQueue() {
@@ -87,7 +82,7 @@ void menuQueue() {
 }
 void menuTree(TREE &t) {
     int choice;
-    int n = 100, arr[n];
+    queue<int> q;
     do {
         // hien thi menu tree
         system("cls");
@@ -106,26 +101,26 @@ void menuTree(TREE &t) {
         switch (choice) {
             case 1: {
                 int x;
-                cout << "Nhap so nguyen x = ";
+                cout << "Nhap so nguyen = ";
                 cin >> x;
-                // inArrTree(x, arr);
                 addNodeTree(t, x);
+                q.push(x);
                 break;
             }
             case 2: {
-                // outArrTree(arr);
+                outputTreeQueue(q);
                 cout << "\nDuyet N-L-R: ";
                 traversalNLR(t);
                 break;
             }
             case 3: {
-                // outArrTree(arr);
+                outputTreeQueue(q);
                 cout << "\nDuyet L-N-R: ";
                 traversalLNR(t);
                 break;
             }
             case 4: {
-                // outArrTree(arr);
+                outputTreeQueue(q);
                 cout << "\nDuyet L-R-N: ";
                 traversalLRN(t);
                 break;
